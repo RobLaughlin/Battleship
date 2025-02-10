@@ -199,7 +199,7 @@ export class Gameboard {
 
     allSunk() {
         return this.#ships.every((shipState) => {
-            shipState.ship.isSunk();
+            return shipState.ship.isSunk();
         });
     }
 }

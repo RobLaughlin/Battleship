@@ -208,5 +208,29 @@ function testGameboard() {
         expect(gb.shipAt([8, 0])).toStrictEqual([ship, false]);
         expect(ship.hits).toBe(0);
     });
+
+    test("Properly reports when all ships have been sunk", () => {
+        const gb = new Gameboard(10);
+        gb.placeShip(new Ship(4, "Battleship"), [4, 4]);
+        gb.placeShip(new Ship(2, "Destroyer"), [4, 5], false);
+
+        // Destroy the battleship
+        for (let i = 4; i < 8; i++) {
+            gb.receiveAttack([i, 4]);
+            expect(gb.allSunk()).toBe(false);
+        }
+        let [ship, _] = gb.shipAt([5, 4]);
+        expect(ship.isSunk()).toBe(true);
+
+        // Destroy the destroyer
+        for (let i = 5; i < 7; i++) {
+            gb.receiveAttack([4, i]);
+        }
+        [ship, _] = gb.shipAt([4, 5]);
+        expect(ship.isSunk()).toBe(true);
+
+        // Check if all ships have been sunk
+        expect(gb.allSunk()).toBe(true);
+    });
 }
 describe("Gameboard object tests", testGameboard);
