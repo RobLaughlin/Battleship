@@ -171,6 +171,16 @@ function testGameboard() {
             expect(gb.shipAt([3, 0])).toStrictEqual([ship, false]);
             expect(gb.shipAt([4, 0])).toStrictEqual([null, true]);
             expect(ship.hits).toBe(1);
+
+            // Attacked in the same spot, hits shouldn't go up
+            gb.receiveAttack([0, 0]);
+            expect(gb.shipAt([0, 0])).toStrictEqual([ship, true]);
+            expect(ship.hits).toBe(1);
+
+            // Attacked in a different spot, hits should go up
+            gb.receiveAttack([3, 0]);
+            expect(gb.shipAt([3, 0])).toStrictEqual([ship, true]);
+            expect(ship.hits).toBe(2);
         });
     });
 
@@ -196,7 +206,7 @@ function testGameboard() {
         expect(gb.shipAt([6, 0])).toStrictEqual([ship, true]);
         expect(gb.shipAt([7, 0])).toStrictEqual([ship, false]);
         expect(gb.shipAt([8, 0])).toStrictEqual([ship, false]);
-        expect(ship.hits).toBe(1);
+        expect(ship.hits).toBe(0);
     });
 }
 describe("Gameboard object tests", testGameboard);

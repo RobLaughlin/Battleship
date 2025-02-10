@@ -120,14 +120,15 @@ export class Gameboard {
             throw new RangeError("Invalid coordinate");
         }
 
+        // Update the ship state if necessary
+        const [ship, hit] = this.shipAt(coord);
+        if (ship !== null && !hit) {
+            ship.hit();
+        }
+
         // Update the board state
         const [r, c] = coord;
         this.#board[r][c][1] = true;
-
-        const [ship, _] = this.shipAt(coord);
-        if (ship !== null) {
-            ship.hit();
-        }
     }
     /*
         Returns the ship object along with the ship hit status
@@ -194,5 +195,11 @@ export class Gameboard {
         this.#ships.push(shipState);
 
         return true;
+    }
+
+    allSunk() {
+        return this.#ships.every((shipState) => {
+            shipState.ship.isSunk();
+        });
     }
 }
