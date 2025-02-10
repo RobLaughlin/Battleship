@@ -1,49 +1,5 @@
-function assertPosInteger(n, errMsg) {
-    if (typeof n !== "number" || !Number.isInteger(n)) {
-        throw new TypeError(errMsg);
-    }
-
-    if (n <= 0) {
-        throw new RangeError(errMsg);
-    }
-}
-
-export class Ship {
-    #name;
-    #length;
-    #hits = 0;
-
-    constructor(length, name = "Ship") {
-        assertPosInteger(length, "Length must be a positive integer");
-
-        if (typeof name !== "string") {
-            throw new TypeError("Name must be a string.");
-        }
-
-        this.#length = length;
-        this.#name = name;
-    }
-
-    get name() {
-        return this.#name;
-    }
-
-    get length() {
-        return this.#length;
-    }
-
-    get hits() {
-        return this.#hits;
-    }
-
-    hit() {
-        this.#hits++;
-    }
-
-    isSunk() {
-        return this.#hits >= this.#length;
-    }
-}
+import { assertPosInteger } from "./utils";
+import { Ship } from "./Ship";
 
 export class Gameboard {
     #size;
