@@ -48,6 +48,7 @@ export class Ship {
 export class Gameboard {
     #size;
     #board = [];
+    #ships = [];
 
     /*
         Creates a (size x size) board where every cell contains a [ship, hit] state.
@@ -175,14 +176,22 @@ export class Gameboard {
         }
 
         // Now we're free to update the board state
+        let shipCopy = new Ship(ship.length, ship.name);
+        const shipState = {
+            ship: shipCopy,
+            cells: [],
+        };
+
         for (let i = 0; i < ship.length; i++) {
             const [row, col] = vertical
                 ? [start[0] + i, start[1]]
                 : [start[0], start[1] + i];
 
             const hitStatus = this.#board[row][col][1];
-            this.#board[row][col] = [ship, hitStatus];
+            this.#board[row][col] = [shipCopy, hitStatus];
+            shipState.cells.push([row, col]);
         }
+        this.#ships.push(shipState);
 
         return true;
     }

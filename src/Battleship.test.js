@@ -146,9 +146,13 @@ function testGameboard() {
 
         test("returns the updated state properly", () => {
             const gb = new Gameboard(5);
-            const ship = new Ship(4, "Battleship");
+            let ship = new Ship(4, "Battleship");
+
             expect(gb.shipAt([0, 0])).toStrictEqual([null, false]);
             gb.placeShip(ship, [0, 0], true);
+            const [shipCopy, _] = gb.shipAt([0, 0]);
+            ship = shipCopy;
+
             expect(gb.shipAt([0, 0])).toStrictEqual([ship, false]);
 
             // Cell gets attacked and hits the ship
@@ -175,11 +179,24 @@ function testGameboard() {
         gb.receiveAttack([6, 0]);
         expect(gb.shipAt([6, 0])).toStrictEqual([null, true]);
 
-        const ship = new Ship(4, "Battleship");
+        // Adding a ship after we attack a square
+        let ship = new Ship(4, "Battleship");
         gb.placeShip(ship, [6, 0], true);
+
+        const [shipCopy, _] = gb.shipAt([9, 0]);
+        ship = shipCopy;
+
         expect(gb.shipAt([6, 0])).toStrictEqual([ship, true]);
         expect(gb.shipAt([7, 0])).toStrictEqual([ship, false]);
         expect(gb.shipAt([8, 0])).toStrictEqual([ship, false]);
+        expect(ship.hits).toBe(0);
+
+        // Attacking the ship after the square has been attacked already
+        gb.receiveAttack([6, 0]);
+        expect(gb.shipAt([6, 0])).toStrictEqual([ship, true]);
+        expect(gb.shipAt([7, 0])).toStrictEqual([ship, false]);
+        expect(gb.shipAt([8, 0])).toStrictEqual([ship, false]);
+        expect(ship.hits).toBe(1);
     });
 }
 describe("Gameboard object tests", testGameboard);
