@@ -8,5 +8,19 @@
     "scripts": {
         "test": "jest --verbose",
         "watch": "jest --watch --verbose /*.js"
-    }
+    },
+    "name": "battleship",
+    "version": "1.0.0",
+    "description": "A unit-tested implementation of the game Battleship",
+    "main": "app.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/RobLaughlin/Battleship.git"
+    },
+    "author": "Rob Laughlin",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/RobLaughlin/Battleship/issues"
+    },
+    "homepage": "https://github.com/RobLaughlin/Battleship#readme"
 }
