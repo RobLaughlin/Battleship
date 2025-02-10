@@ -93,26 +93,44 @@ export class Gameboard {
         Returns whether or not the coordinate falls within the gameboard size.
     */
     validCoord(coord) {
-        if (!(coord instanceof Array) || coord.length !== 2) {
-            throw new TypeError("Coord must be an array of length 2");
-        }
+        try {
+            if (!(coord instanceof Array) || coord.length !== 2) {
+                throw new TypeError("Coord must be an array of length 2");
+            }
 
-        // Want to include [0,0], [1,0], and [0,1] as valid coords
-        coord.forEach((n) => {
-            assertPosInteger(
-                n + 1,
-                "Coordinate must have non-negative integers"
-            );
-        });
+            // Want to include [0,0], [1,0], and [0,1] as valid coords
+            coord.forEach((n) => {
+                assertPosInteger(
+                    n + 1,
+                    "Coordinate must have non-negative integers"
+                );
+            });
+        } catch (error) {
+            return false;
+        }
 
         const validRow = coord[0] >= 0 && coord[0] < this.#size;
         const validCol = coord[1] >= 0 && coord[1] < this.#size;
         return validRow && validCol;
     }
 
+    receiveAttack(coord) {
+        if (!this.validCoord(coord)) {
+            throw new RangeError("Invalid coordinate");
+        }
+
+        // Update the board state
+        const [r, c] = coord;
+        this.#board[r][c][1] = true;
+
+        const [ship, _] = this.shipAt(coord);
+        if (ship !== null) {
+            ship.hit();
+        }
+    }
     /*
         Returns the ship object along with the ship hit status
-        at the given coordinate [ship, shipHit].
+        at the given coordinate: [ship, shipHit].
     */
     shipAt(coord) {
         if (!this.validCoord(coord)) {
@@ -162,7 +180,8 @@ export class Gameboard {
                 ? [start[0] + i, start[1]]
                 : [start[0], start[1] + i];
 
-            this.#board[row][col] = [ship, false];
+            const hitStatus = this.#board[row][col][1];
+            this.#board[row][col] = [ship, hitStatus];
         }
 
         return true;
