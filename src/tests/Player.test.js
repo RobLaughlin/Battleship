@@ -1,5 +1,5 @@
 import { test, describe, expect } from "@jest/globals";
-import { Player } from "./Player";
+import { Player } from "../js/Player";
 
 function testPlayerObject() {
     test("Name must be a non-empty string", () => {

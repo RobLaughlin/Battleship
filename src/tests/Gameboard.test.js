@@ -1,6 +1,6 @@
 import { test, describe, expect } from "@jest/globals";
-import { Gameboard } from "./Gameboard";
-import { Ship } from "./Ship";
+import { Gameboard } from "../js/Gameboard";
+import { Ship } from "../js/Ship";
 
 function testGameboard() {
     test("Gameboard size must be a positive integer", () => {

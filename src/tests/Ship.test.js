@@ -1,5 +1,5 @@
 import { test, describe, expect } from "@jest/globals";
-import { Ship } from "./Ship";
+import { Ship } from "../js/Ship";
 
 function testShip() {
     test("Ship length can only be positive integers", () => {
