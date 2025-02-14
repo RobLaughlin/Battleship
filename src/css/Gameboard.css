@@ -1,0 +1,28 @@
+#MainContainer {
+    width: 80%;
+}
+
+.gameboard {
+    width: min(80%, 75vh);
+    aspect-ratio: 1 / 1;
+    display: grid;
+}
+
+.gameboard .square {
+    background-color: white;
+    border: 1px solid black;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    font-family: "Courier New", Courier, monospace;
+    font-size: min(3vw, 32px);
+    display: flex;
+}
+
+/* .gameboard .square.header {
+    font-weight: bold;
+} */
+
+.gameboard .square p {
+    margin: auto;
+}
