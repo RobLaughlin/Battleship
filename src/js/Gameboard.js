@@ -133,9 +133,8 @@ export class Gameboard {
         }
 
         // Now we're free to update the board state
-        let shipCopy = new Ship(ship.length, ship.name);
         const shipState = {
-            ship: shipCopy,
+            ship: ship,
             cells: [],
         };
 
@@ -145,7 +144,7 @@ export class Gameboard {
                 : [start[0], start[1] + i];
 
             const hitStatus = this.#board[row][col][1];
-            this.#board[row][col] = [shipCopy, hitStatus];
+            this.#board[row][col] = [ship, hitStatus];
             shipState.cells.push([row, col]);
         }
         this.#ships.push(shipState);
