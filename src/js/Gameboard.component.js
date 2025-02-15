@@ -1,25 +1,18 @@
-import "../css/Gameboard.css";
-import { Gameboard } from "./Gameboard";
 import { Ship } from "./Ship";
 import { str2Node } from "./utils";
 
-const MAX_SIZE = 26;
+import "../css/Gameboard.css";
 
 export class ColoredShip extends Ship {
-    constructor(length, name, color) {
+    constructor(length, name, color, hidden = false) {
         super(length, name);
         this.color = color;
+        this.hidden = hidden;
     }
 }
 
-export const createGameboard = (size) => {
-    if (size > MAX_SIZE) {
-        throw new RangeError(
-            `Size of gameboard component must be <= ${MAX_SIZE}`
-        );
-    }
-    const board = new Gameboard(size);
-    const gridSize = size + 1;
+export const createGameboard = (board) => {
+    const gridSize = board.size + 1;
 
     const generateGrid = () => {
         let letters = Array.from(Array(gridSize).keys());
@@ -58,7 +51,7 @@ export const createGameboard = (size) => {
                 const coord = [row, col];
                 const [ship, hit] = board.shipAt(coord);
 
-                if (ship !== null) {
+                if (ship !== null && !ship.hidden) {
                     squareNode.style.backgroundColor = ship.color;
                 }
             }
@@ -83,13 +76,8 @@ export const createGameboard = (size) => {
         return gameboard;
     };
 
-    const placeShip = (ship, coord, vertical) => {
-        board.placeShip(ship, coord, vertical);
-    };
-
     return {
         render,
-        placeShip,
         board,
     };
 };

@@ -1,0 +1,10 @@
+body {
+    display: flex;
+    height: 100vh;
+}
+
+#MainContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: auto;
+}

@@ -1,6 +1,10 @@
 import { createGameboard } from "./Gameboard.component";
 import { ColoredShip } from "./Gameboard.component";
 import { randrangeInt } from "./utils";
+import { Player } from "./Player";
+
+import "../css/index.css";
+import { createPlayer } from "./Player.component";
 
 const GAMEBOARD_SIZE = 10;
 const GENERATE_SHIPS = () => {
@@ -41,18 +45,26 @@ function getValidCoords(gameboard, ship, vertical) {
     return coords;
 }
 
-function main() {
-    const gb = createGameboard(GAMEBOARD_SIZE);
-    const board = gb.board;
-    GENERATE_SHIPS().forEach((ship) => {
+function placeRandomShips(ships, board, hideShips) {
+    ships.forEach((ship) => {
+        ship.hidden = hideShips;
         const vertical = Boolean(randrangeInt(0, 1));
         const validCoords = getValidCoords(board, ship, vertical);
         const coordIdx = randrangeInt(0, validCoords.length - 1);
         const coord = validCoords[coordIdx];
-        gb.placeShip(ship, coord, vertical);
+        board.placeShip(ship, coord, vertical);
     });
-    const node = gb.render();
+}
+
+function main() {
+    const p1 = createPlayer(new Player("You", GAMEBOARD_SIZE));
+    const p2 = createPlayer(new Player("Computer", GAMEBOARD_SIZE));
+
+    placeRandomShips(GENERATE_SHIPS(), p1.player.board, false);
+    placeRandomShips(GENERATE_SHIPS(), p2.player.board, true);
+
     const gbContainer = document.getElementById("MainContainer");
-    gbContainer.appendChild(node);
+    gbContainer.appendChild(p1.render());
+    gbContainer.appendChild(p2.render());
 }
 main();
