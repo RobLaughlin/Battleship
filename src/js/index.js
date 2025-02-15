@@ -3,13 +3,15 @@ import { ColoredShip } from "./Gameboard.component";
 import { randrangeInt } from "./utils";
 
 const GAMEBOARD_SIZE = 10;
-const SHIPS = [
-    new ColoredShip(5, "Carrier", "#BFECFF"),
-    new ColoredShip(4, "Battleship", "#CDC1FF"),
-    new ColoredShip(3, "Cruiser", "#B1C29E"),
-    new ColoredShip(3, "Submarine", "#FFCCEA"),
-    new ColoredShip(2, "Destroyer", "#DEAA79"),
-];
+const GENERATE_SHIPS = () => {
+    return [
+        new ColoredShip(5, "Carrier", "#BFECFF"),
+        new ColoredShip(4, "Battleship", "#CDC1FF"),
+        new ColoredShip(3, "Cruiser", "#B1C29E"),
+        new ColoredShip(3, "Submarine", "#FFCCEA"),
+        new ColoredShip(2, "Destroyer", "#DEAA79"),
+    ];
+};
 
 /*
     Return all valid coords where we are able to put a ship
@@ -22,7 +24,6 @@ function getValidCoords(gameboard, ship, vertical) {
     for (let row = 0; row < endRow; row++) {
         for (let col = 0; col < endCol; col++) {
             let shipFound = false;
-            const coordsToCheck = [];
             for (let i = 0; i < ship.length; i++) {
                 const coord = vertical ? [row + i, col] : [row, col + i];
                 if (gameboard.shipAt(coord)[0] !== null) {
@@ -43,7 +44,7 @@ function getValidCoords(gameboard, ship, vertical) {
 function main() {
     const gb = createGameboard(GAMEBOARD_SIZE);
     const board = gb.board;
-    SHIPS.forEach((ship) => {
+    GENERATE_SHIPS().forEach((ship) => {
         const vertical = Boolean(randrangeInt(0, 1));
         const validCoords = getValidCoords(board, ship, vertical);
         const coordIdx = randrangeInt(0, validCoords.length - 1);
