@@ -23,28 +23,29 @@ export const createGameboard = (board) => {
         const squares = [];
 
         for (let i = 0; i < gridSize ** 2; i++) {
-            // Determine whether the row and column is a header cell
-            const isColHeader = i < gridSize && i !== 0;
-            const isRowHeader = i % gridSize == 0 && i !== 0;
-            const isHeader = isColHeader || isRowHeader || i === 0;
-
-            const headerClass = isHeader ? "header" : "";
-            const colHeaderClass = isColHeader ? "colHeader" : "";
-            const rowHeaderClass = isRowHeader ? "rowHeader" : "";
-            const colHeaderTxt = isColHeader
-                ? /*html*/ `<p>${letters[i - 1]}</p>`
-                : "";
-            const rowHeaderTxt = isRowHeader
-                ? /*html*/ `<p>${Math.floor(i / gridSize)}</p>`
-                : "";
-
             const squareHtml = /*html*/ `
-                <div class="square ${headerClass} ${colHeaderClass} ${rowHeaderClass}">
-                    ${colHeaderTxt} ${rowHeaderTxt}
-                </div>
+                <div class="square"></div>
             `;
             const squareNode = str2Node(squareHtml);
-            if (!isHeader) {
+
+            const isColHeader = i < gridSize && i !== 0;
+            const isRowHeader = i % gridSize == 0 && i !== 0;
+            if (isRowHeader || isColHeader || i === 0) {
+                squareNode.classList.add("header");
+                if (isRowHeader) {
+                    const rowHeaderTxt = str2Node(/*html*/ `
+                        <p>${Math.floor(i / gridSize)}</p>
+                    `);
+                    squareNode.classList.add("rowHeader");
+                    squareNode.appendChild(rowHeaderTxt);
+                } else if (isColHeader) {
+                    const colHeaderTxt = str2Node(
+                        /*html*/ `<p>${letters[i - 1]}</p>`
+                    );
+                    squareNode.classList.add("colHeader");
+                    squareNode.appendChild(colHeaderTxt);
+                }
+            } else {
                 // Shift index back one row and one column
                 const row = Math.floor(i / gridSize) - 1;
                 const col = (i % gridSize) - 1;
@@ -53,7 +54,11 @@ export const createGameboard = (board) => {
 
                 if (ship !== null && !ship.hidden) {
                     squareNode.style.backgroundColor = ship.color;
+                    squareNode.classList.add("ship");
+                    squareNode.setAttribute("data-ship", ship.name);
                 }
+                squareNode.setAttribute("data-row", row);
+                squareNode.setAttribute("data-col", col);
             }
             squares.push(squareNode);
         }

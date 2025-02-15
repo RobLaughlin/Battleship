@@ -13,7 +13,7 @@ export const createPlayer = (player) => {
             </div>
         `);
         node.appendChild(board.render());
-
+        node.setAttribute("data-player", player.name);
         return node;
     };
 

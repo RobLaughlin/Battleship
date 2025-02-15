@@ -2,4 +2,5 @@
     font-family: "Courier New", Courier, monospace;
     font-size: min(48px, 4vw);
     text-align: center;
+    cursor: default;
 }
