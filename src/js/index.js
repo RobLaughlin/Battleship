@@ -1,6 +1,6 @@
 import { createGameboard } from "./Gameboard.component";
 import { ColoredShip } from "./Gameboard.component";
-import { randrangeInt } from "./utils";
+import { randrangeInt, str2Node } from "./utils";
 import { Player } from "./Player";
 
 import "../css/index.css";
@@ -56,20 +56,45 @@ function placeRandomShips(ships, board, hideShips) {
     });
 }
 
+/* 
+    Determines the winner between two players.
+    Returns 0 if there is no winner, 1 if p1 is the winner and 2 if p2 is the winner.
+*/
+
+function determineWinner(player1, player2) {
+    const b1Sunk = player1.player.board.allSunk();
+    const b2Sunk = player2.player.board.allSunk();
+    if (!b1Sunk && !b2Sunk) {
+        return 0;
+    }
+
+    return Number(b1Sunk) + 1;
+}
+
 function renderPlayers(p1, p2) {
+    const winner = determineWinner(p1, p2);
     const newP1Node = p1.render();
     const newP2Node = p2.render();
-    const newP2Squares = newP2Node.querySelectorAll(
-        ".square:not([class*='header']):not([class*='hit'])"
-    );
-    newP2Squares.forEach((square) => {
-        square.addEventListener("click", (e) => {
-            computerSquareClicked(p1, p2, e);
+    const p1name = newP1Node.querySelector(".name");
+    const p2name = newP2Node.querySelector(".name");
+
+    if (winner) {
+        p1name.classList.add(winner === 1 ? "winner" : "loser");
+        p2name.classList.add(winner === 2 ? "winner" : "loser");
+    } else {
+        const newP2Squares = newP2Node.querySelectorAll(
+            ".square:not([class*='header']):not([class*='hit'])"
+        );
+        newP2Squares.forEach((square) => {
+            square.addEventListener("click", (e) => {
+                computerSquareClicked(p1, p2, e);
+            });
         });
-    });
+    }
 
     const root = document.getElementById("MainContainer");
     root.innerHTML = "";
+
     root.appendChild(newP1Node);
     root.appendChild(newP2Node);
 }
@@ -108,14 +133,45 @@ function computerSquareClicked(p1, p2, e) {
     const row = e.target.dataset.row;
     const col = e.target.dataset.col;
     const coord = [parseInt(row), parseInt(col)];
-    console.log(coord);
     player.attack(other, coord);
-    other.attack(player, getRandomFreeCoord(player.board));
+
+    // If there's still no winner, let the other player attack
+    if (!determineWinner(p1, p2)) {
+        other.attack(player, getRandomFreeCoord(player.board));
+    }
     renderPlayers(p1, p2);
+
+    // If there's a winner now, make it the other player's turn to
+    // disable square selection for p1
+    const winner = determineWinner(p1, p2);
+    if (winner) {
+        player.setTurn(false);
+        other.setTurn(true);
+        renderPlayers(p1, p2);
+
+        const winnerName = winner === 1 ? player.name : other.name;
+        const playAgainNode = str2Node(/*html*/ `
+            <div class="playAgainContainer">
+                <p>${winnerName} wins! Play again?</p>
+                <button class="playAgainBtn">Play Again</button>
+            </div>
+        `);
+        playAgainNode.querySelector(".playAgainBtn");
+        playAgainNode.addEventListener("click", () => {
+            p1 = createPlayer(new Player(player.name, player.board.size, true));
+            p2 = createPlayer(new Player(other.name, other.board.size, false));
+            placeRandomShips(GENERATE_SHIPS(), p1.player.board, false);
+            placeRandomShips(GENERATE_SHIPS(), p2.player.board, true);
+            renderPlayers(p1, p2);
+        });
+
+        const mainContainer = document.querySelector("#MainContainer");
+        mainContainer.appendChild(playAgainNode);
+    }
 }
 
 function main() {
-    const p1 = createPlayer(new Player("You", GAMEBOARD_SIZE, true));
+    const p1 = createPlayer(new Player("Player", GAMEBOARD_SIZE, true));
     const p2 = createPlayer(new Player("Computer", GAMEBOARD_SIZE, false));
 
     placeRandomShips(GENERATE_SHIPS(), p1.player.board, false);

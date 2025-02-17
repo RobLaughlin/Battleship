@@ -9,8 +9,25 @@ body {
     margin: auto;
 }
 
-.player:not([data-player="You"]):not([data-turnActive="true"])
+.player:not([data-player="Player"])[data-turnactive="false"]
     .square:hover:not([class*="header"]):not([class*="hit"]) {
     cursor: pointer;
     background-color: lightcoral;
+}
+
+.playAgainContainer {
+    margin-top: 16px;
+    display: grid;
+    grid-template-rows: 2fr 1fr;
+    text-align: center;
+    grid-column: span 2;
+    justify-content: center;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 32px;
+}
+
+.playAgainBtn {
+    width: 200px;
+    height: 32px;
+    margin: auto;
 }

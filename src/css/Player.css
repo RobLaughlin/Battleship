@@ -4,3 +4,11 @@
     text-align: center;
     cursor: default;
 }
+
+.player .name.winner {
+    color: green;
+}
+
+.player .name.loser {
+    color: red;
+}
