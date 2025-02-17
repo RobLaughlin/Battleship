@@ -5,12 +5,13 @@ export class Player {
     #name = "Player";
     #turn = true;
 
-    constructor(name, boardSize = 10) {
+    constructor(name, boardSize = 10, turn = true) {
         if (typeof name !== "string" || name === "") {
             throw new TypeError("name must be a non-empty string");
         }
         this.#name = name;
         this.#board = new Gameboard(boardSize);
+        this.#turn = turn;
     }
 
     get name() {
@@ -25,12 +26,16 @@ export class Player {
         return this.#turn;
     }
 
+    setTurn(turn) {
+        this.#turn = turn;
+    }
+
     attack(player, coord) {
         if (!this.#turn) {
             return false;
         }
 
-        this.#turn = false;
+        this.setTurn(false);
         player.receiveAttack(coord);
         return true;
     }
@@ -40,7 +45,7 @@ export class Player {
             return false;
         }
 
-        this.#turn = true;
+        this.setTurn(true);
         this.#board.receiveAttack(coord);
         return true;
     }

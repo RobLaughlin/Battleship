@@ -9,7 +9,8 @@ body {
     margin: auto;
 }
 
-.player:not([data-player="You"]) .square:hover:not([class*="header"]) {
+.player:not([data-player="You"]):not([data-turnActive="true"])
+    .square:hover:not([class*="header"]) {
     cursor: pointer;
     background-color: lightcoral;
 }

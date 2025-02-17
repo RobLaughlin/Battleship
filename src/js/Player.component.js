@@ -14,6 +14,7 @@ export const createPlayer = (player) => {
         `);
         node.appendChild(board.render());
         node.setAttribute("data-player", player.name);
+        node.setAttribute("data-turnActive", player.turn);
         return node;
     };
 

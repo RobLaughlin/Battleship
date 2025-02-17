@@ -21,6 +21,15 @@
     display: flex;
 }
 
+.gameboard .square:not([class*="header"]) p {
+    color: gray;
+    font-weight: bold;
+}
+
+.gameboard .square:not([class*="header"]) p.directHit {
+    color: red;
+}
+
 .gameboard .square.ship {
     cursor: pointer;
 }

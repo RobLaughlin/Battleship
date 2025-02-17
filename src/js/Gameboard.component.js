@@ -52,6 +52,16 @@ export const createGameboard = (board) => {
                 const coord = [row, col];
                 const [ship, hit] = board.shipAt(coord);
 
+                let hitNode = str2Node(/*html*/ `
+                    <p class="hit">${hit ? "o" : ""}</p>
+                `);
+
+                if (hit && ship !== null) {
+                    hitNode.textContent = "X";
+                    hitNode.classList.add("directHit");
+                }
+
+                squareNode.appendChild(hitNode);
                 if (ship !== null && !ship.hidden) {
                     squareNode.style.backgroundColor = ship.color;
                     squareNode.classList.add("ship");

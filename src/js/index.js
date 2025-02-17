@@ -56,15 +56,43 @@ function placeRandomShips(ships, board, hideShips) {
     });
 }
 
+function renderPlayers(p1, p2) {
+    const newP1Node = p1.render();
+    const newP2Node = p2.render();
+    const newP2Squares = newP2Node.querySelectorAll(".square");
+    newP2Squares.forEach((square) => {
+        square.addEventListener("click", (e) => {
+            computerSquareClicked(p1, p2, e);
+        });
+    });
+
+    const root = document.getElementById("MainContainer");
+    root.innerHTML = "";
+    root.appendChild(newP1Node);
+    root.appendChild(newP2Node);
+}
+
+function computerSquareClicked(p1, p2, e) {
+    const [player, other] = [p1.player, p2.player];
+
+    if (!player.turn) {
+        return;
+    }
+
+    const row = e.target.dataset.row;
+    const col = e.target.dataset.col;
+    const coord = [parseInt(row), parseInt(col)];
+
+    player.attack(other, coord);
+    renderPlayers(p1, p2);
+}
+
 function main() {
-    const p1 = createPlayer(new Player("You", GAMEBOARD_SIZE));
-    const p2 = createPlayer(new Player("Computer", GAMEBOARD_SIZE));
+    const p1 = createPlayer(new Player("You", GAMEBOARD_SIZE, true));
+    const p2 = createPlayer(new Player("Computer", GAMEBOARD_SIZE, false));
 
     placeRandomShips(GENERATE_SHIPS(), p1.player.board, false);
     placeRandomShips(GENERATE_SHIPS(), p2.player.board, true);
-
-    const gbContainer = document.getElementById("MainContainer");
-    gbContainer.appendChild(p1.render());
-    gbContainer.appendChild(p2.render());
+    renderPlayers(p1, p2);
 }
 main();
