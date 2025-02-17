@@ -59,7 +59,9 @@ function placeRandomShips(ships, board, hideShips) {
 function renderPlayers(p1, p2) {
     const newP1Node = p1.render();
     const newP2Node = p2.render();
-    const newP2Squares = newP2Node.querySelectorAll(".square");
+    const newP2Squares = newP2Node.querySelectorAll(
+        ".square:not([class*='header']):not([class*='hit'])"
+    );
     newP2Squares.forEach((square) => {
         square.addEventListener("click", (e) => {
             computerSquareClicked(p1, p2, e);
@@ -71,19 +73,44 @@ function renderPlayers(p1, p2) {
     root.appendChild(newP1Node);
     root.appendChild(newP2Node);
 }
+/*
+    Gets a random coord of a square that hasn't been hit
+*/
+
+function getRandomFreeCoord(board) {
+    const coords = [];
+    for (let row = 0; row < board.size; row++) {
+        for (let col = 0; col < board.size; col++) {
+            const coord = [row, col];
+            const [_, hit] = board.shipAt(coord);
+            if (!hit) {
+                coords.push(coord);
+            }
+        }
+    }
+
+    // If there is no coord available
+    if (coords.length === 0) {
+        return null;
+    }
+
+    const i = randrangeInt(0, coords.length - 1);
+    return coords[i];
+}
 
 function computerSquareClicked(p1, p2, e) {
     const [player, other] = [p1.player, p2.player];
 
-    if (!player.turn) {
+    if (!player.turn || e.target !== e.currentTarget) {
         return;
     }
 
     const row = e.target.dataset.row;
     const col = e.target.dataset.col;
     const coord = [parseInt(row), parseInt(col)];
-
+    console.log(coord);
     player.attack(other, coord);
+    other.attack(player, getRandomFreeCoord(player.board));
     renderPlayers(p1, p2);
 }
 

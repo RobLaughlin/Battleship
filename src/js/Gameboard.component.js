@@ -52,8 +52,12 @@ export const createGameboard = (board) => {
                 const coord = [row, col];
                 const [ship, hit] = board.shipAt(coord);
 
+                if (hit) {
+                    squareNode.classList.add("hit");
+                }
+
                 let hitNode = str2Node(/*html*/ `
-                    <p class="hit">${hit ? "o" : ""}</p>
+                    <p>${hit ? "O" : ""}</p>
                 `);
 
                 if (hit && ship !== null) {
@@ -62,7 +66,7 @@ export const createGameboard = (board) => {
                 }
 
                 squareNode.appendChild(hitNode);
-                if (ship !== null && !ship.hidden) {
+                if (ship !== null && (!ship.hidden || ship.isSunk())) {
                     squareNode.style.backgroundColor = ship.color;
                     squareNode.classList.add("ship");
                     squareNode.setAttribute("data-ship", ship.name);

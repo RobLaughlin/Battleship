@@ -72,6 +72,7 @@ export class Gameboard {
     }
 
     receiveAttack(coord) {
+        // console.log(coord);
         if (!this.validCoord(coord)) {
             throw new RangeError("Invalid coordinate");
         }

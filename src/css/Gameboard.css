@@ -19,6 +19,12 @@
     font-family: "Courier New", Courier, monospace;
     font-size: min(2vw, 32px);
     display: flex;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .gameboard .square:not([class*="header"]) p {
