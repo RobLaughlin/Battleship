@@ -28,7 +28,7 @@ export class Gameboard {
     }
 
     // Check if the given ship collides with another ship on the board
-    #hasCollisions(ship, coord, vertical) {
+    hasCollisions(ship, coord, vertical) {
         const start = coord;
 
         for (let i = 0; i < ship.length; i++) {
@@ -43,6 +43,10 @@ export class Gameboard {
         }
 
         return false;
+    }
+
+    numShips() {
+        return this.#ships.length;
     }
 
     /*
@@ -128,7 +132,7 @@ export class Gameboard {
         if (
             !this.validCoord(start) ||
             !this.validCoord(end) ||
-            this.#hasCollisions(ship, coord, vertical)
+            this.hasCollisions(ship, coord, vertical)
         ) {
             return false;
         }

@@ -15,6 +15,14 @@ body {
     background-color: lightcoral;
 }
 
+.gameboard {
+    width: min(70%, 75vh);
+}
+
+.gameboard .square {
+    font-size: min(1.5vw, 32px);
+}
+
 .playAgainContainer {
     margin-top: 16px;
     display: grid;
@@ -24,6 +32,7 @@ body {
     justify-content: center;
     font-family: "Courier New", Courier, monospace;
     font-size: 32px;
+    margin-bottom: 32px;
 }
 
 .playAgainBtn {
