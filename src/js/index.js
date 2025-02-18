@@ -98,6 +98,7 @@ function renderPlayers(p1, p2) {
                 computerSquareClicked(p1, p2, e);
             });
         });
+    } else {
     }
 
     const root = document.getElementById("MainContainer");
@@ -111,10 +112,10 @@ function renderPlayers(p1, p2) {
         root.appendChild(newP1Node);
     }
 }
+
 /*
     Gets a random coord of a square that hasn't been hit
 */
-
 function getRandomFreeCoord(board) {
     const coords = [];
     for (let row = 0; row < board.size; row++) {
@@ -196,7 +197,9 @@ function init() {
     let currentShip = 0;
     let vertical = true;
 
-    function highlightShips(coord, place) {
+    function highlightShips(coord, place, e) {
+        e.target.style.cursor = "default";
+
         // Check if ship is available
         if (currentShip >= ships.length) {
             return;
@@ -214,6 +217,7 @@ function init() {
         }
 
         // If we can place a ship here
+        e.target.style.cursor = "pointer";
         if (place) {
             p1.player.board.placeShip(ship, coord, vertical);
             currentShip++;
@@ -231,6 +235,7 @@ function init() {
             shipSquare.style.backgroundColor = ship.color;
             if (place) {
                 shipSquare.classList.add("ship");
+                shipSquare.style.cursor = "default";
             }
         }
     }
@@ -258,7 +263,7 @@ function init() {
         const coord = [row, col];
 
         clearP1Squares();
-        highlightShips(coord, false);
+        highlightShips(coord, false, e);
     };
 
     const onClick = (e) => {
@@ -273,7 +278,7 @@ function init() {
         const coord = [row, col];
 
         clearP1Squares();
-        highlightShips(coord, true);
+        highlightShips(coord, true, e);
 
         // Placing stage is finished, remove event listeners and continue with the game
         if (currentShip >= ships.length) {

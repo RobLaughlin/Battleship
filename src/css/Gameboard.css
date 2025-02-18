@@ -36,10 +36,6 @@
     color: red;
 }
 
-.gameboard .square.ship {
-    cursor: pointer;
-}
-
 .gameboard .square p {
     margin: auto;
 }
