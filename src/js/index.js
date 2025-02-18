@@ -203,16 +203,25 @@ function init() {
             ? "grid-template-rows"
             : "grid-template-columns";
 
-        return str2Node(/*html*/ `
+        const node = str2Node(/*html*/ `
             <div class="piecePreviewContainer">
-                <p>Current piece: ${ship.name}</p>
-                <div class="piecePreview" style="${template}: repeat(${
+                <div>
+                    <p class="currentPiece">Current piece: ${ship.name}</p>
+                    <div class="piecePreview" style="${template}: repeat(${
             ship.length
         }, 1fr)">
-                    ${previewSquare.repeat(ship.length)}
+                        ${previewSquare.repeat(ship.length)}
+                    </div>
+                    <p class="direction">Hit 'R' or left click to rotate the piece.</p>
                 </div>
             </div>
         `);
+
+        const preview = node.querySelector(".piecePreview");
+        preview.addEventListener("click", () => {
+            refreshPiecePreview(true);
+        });
+        return node;
     };
 
     function highlightShips(coord, place) {

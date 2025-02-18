@@ -12,3 +12,7 @@
 .player .name.loser {
     color: red;
 }
+
+.player .gameboard {
+    margin: auto;
+}

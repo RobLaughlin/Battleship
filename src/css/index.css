@@ -46,7 +46,15 @@ body {
     font-family: "Courier New", Courier, monospace;
     text-align: center;
     display: grid;
-    grid-template-rows: 1fr 6fr;
+}
+
+.piecePreviewContainer > div {
+    display: grid;
+    margin-top: auto;
+}
+
+.piecePreviewContainer .currentPiece {
+    margin-top: auto;
 }
 
 .piecePreview {
@@ -54,10 +62,10 @@ body {
     margin: auto;
     cursor: default;
     vertical-align: middle;
-    text-align: center;
 }
 
 .piecePreview .previewSquare {
+    margin: auto;
     aspect-ratio: 1 / 1;
     background-color: white;
     border: 1px solid black;
@@ -73,4 +81,5 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: pointer;
 }
