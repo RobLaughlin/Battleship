@@ -98,7 +98,6 @@ function renderPlayers(p1, p2) {
                 computerSquareClicked(p1, p2, e);
             });
         });
-    } else {
     }
 
     const root = document.getElementById("MainContainer");
@@ -108,7 +107,6 @@ function renderPlayers(p1, p2) {
         root.appendChild(newP1Node);
         root.appendChild(newP2Node);
     } else {
-        newP1Node.style["grid-column"] = "span 2";
         root.appendChild(newP1Node);
     }
 }
@@ -184,7 +182,6 @@ function init() {
     const p1 = createPlayer(new Player(p1Name, GAMEBOARD_SIZE, true));
     const p2 = createPlayer(new Player(p2Name, GAMEBOARD_SIZE, false));
 
-    // placeRandomShips(GENERATE_SHIPS(), p1.player.board, false);
     placeRandomShips(GENERATE_SHIPS(), p2.player.board, true);
     renderPlayers(p1, p2);
 
@@ -196,13 +193,32 @@ function init() {
     const ships = GENERATE_SHIPS();
     let currentShip = 0;
     let vertical = true;
+    let lastMouseCoords = [0, 0];
 
-    function highlightShips(coord, place, e) {
-        e.target.style.cursor = "default";
+    const renderPiecePreview = (ship) => {
+        const previewSquare = /*html*/ `
+            <div class="previewSquare" style="background-color: ${ship.color}"></div>
+        `;
+        const template = vertical
+            ? "grid-template-rows"
+            : "grid-template-columns";
 
+        return str2Node(/*html*/ `
+            <div class="piecePreviewContainer">
+                <p>Current piece: ${ship.name}</p>
+                <div class="piecePreview" style="${template}: repeat(${
+            ship.length
+        }, 1fr)">
+                    ${previewSquare.repeat(ship.length)}
+                </div>
+            </div>
+        `);
+    };
+
+    function highlightShips(coord, place) {
         // Check if ship is available
         if (currentShip >= ships.length) {
-            return;
+            return false;
         }
         const ship = ships[currentShip];
         const [row, col] = coord;
@@ -213,11 +229,10 @@ function init() {
             (!vertical && col > GAMEBOARD_SIZE - ship.length) ||
             p1.player.board.hasCollisions(ship, coord, vertical)
         ) {
-            return;
+            return false;
         }
 
         // If we can place a ship here
-        e.target.style.cursor = "pointer";
         if (place) {
             p1.player.board.placeShip(ship, coord, vertical);
             currentShip++;
@@ -238,6 +253,7 @@ function init() {
                 shipSquare.style.cursor = "default";
             }
         }
+        return true;
     }
 
     function clearP1Squares() {
@@ -249,6 +265,26 @@ function init() {
             square.style.backgroundColor = "white";
         });
     }
+
+    const refreshPiecePreview = (rotate = false) => {
+        const ship = currentShip < ships.length ? ships[currentShip] : null;
+
+        if (ship !== null) {
+            if (rotate) {
+                vertical = !vertical;
+            }
+            const piecePreviewContainer = document.querySelector(
+                ".piecePreviewContainer"
+            );
+            piecePreviewContainer.replaceWith(renderPiecePreview(ship));
+        }
+    };
+
+    const onKeyDown = (e) => {
+        if (e.key === "r") {
+            refreshPiecePreview(true);
+        }
+    };
 
     const onHover = (e) => {
         // Make sure we're hovering over a square
@@ -263,7 +299,12 @@ function init() {
         const coord = [row, col];
 
         clearP1Squares();
-        highlightShips(coord, false, e);
+        const validSquare = highlightShips(coord, false);
+        if (validSquare && !e.target.classList.contains("ship")) {
+            e.target.style.cursor = "pointer";
+        } else {
+            e.target.style.cursor = "default";
+        }
     };
 
     const onClick = (e) => {
@@ -278,23 +319,30 @@ function init() {
         const coord = [row, col];
 
         clearP1Squares();
-        highlightShips(coord, true, e);
+        highlightShips(coord, true);
 
         // Placing stage is finished, remove event listeners and continue with the game
         if (currentShip >= ships.length) {
+            removeEventListener("keydown", onKeyDown);
             p1squares.forEach((square) => {
-                square.removeEventListener("mouseover", onHover);
+                square.removeEventListener("mousemove", onHover);
                 square.removeEventListener("click", onClick);
             });
 
             renderPlayers(p1, p2);
+        } else {
+            refreshPiecePreview();
         }
     };
 
     p1squares.forEach((square) => {
-        square.addEventListener("mouseover", onHover);
+        square.addEventListener("mousemove", onHover);
         square.addEventListener("click", onClick);
     });
+    const root = document.querySelector("#MainContainer");
+    root.appendChild(renderPiecePreview(ships[0]));
+
+    addEventListener("keydown", onKeyDown);
 }
 
 function main() {

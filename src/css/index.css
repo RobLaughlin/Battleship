@@ -40,3 +40,37 @@ body {
     height: 32px;
     margin: auto;
 }
+
+.piecePreviewContainer {
+    font-size: min(36px, 2vw);
+    font-family: "Courier New", Courier, monospace;
+    text-align: center;
+    display: grid;
+    grid-template-rows: 1fr 6fr;
+}
+
+.piecePreview {
+    display: grid;
+    margin: auto;
+    cursor: default;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.piecePreview .previewSquare {
+    aspect-ratio: 1 / 1;
+    background-color: white;
+    border: 1px solid black;
+    height: min(50px, 5vw);
+    width: min(50px, 5vw);
+    text-align: center;
+    font-family: "Courier New", Courier, monospace;
+    font-size: min(2vw, 32px);
+    display: flex;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
